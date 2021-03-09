@@ -1,15 +1,17 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
     public List<GameObject> holder = new List<GameObject>();
     public List<GameObject> tile = new List<GameObject>();
-    private string word;
+    private List<string> word = new List<string>();
     public string currentGuess { get; set; }
     public bool isSolved;
 
@@ -25,12 +27,17 @@ public class GameManager : MonoBehaviour
         Text textI= textInst.GetComponent<Text>();
         textI.enabled = true;
 
-        word = readWordFromFile();
-        Debug.Log("UNscrambled:  " + word);
+        readWordFromFile();
+
+        foreach (string candidate in word)
+        {
+            Debug.Log("UNscrambled candidate:  " + candidate);
+        }
+
         string scrambledWord = scrambleWord();
         isSolved = false;
 
-        for (int i = 0; i < word.Length; i++)
+        for (int i = 0; i < word[0].Length; i++)
         {
             GameObject myHolder = Instantiate(holder[i]);
             myHolder.transform.SetParent(canvasMain.transform, false);
@@ -38,7 +45,7 @@ public class GameManager : MonoBehaviour
             myHolder.name = "Holder_" + i;
         }
 
-        for (int i = 0; i < word.Length; i++)
+        for (int i = 0; i < word[0].Length; i++)
         {
             GameObject myTile = Instantiate(tile[i]);
             myTile.transform.SetParent(canvasMain.transform,false);
@@ -65,21 +72,21 @@ public class GameManager : MonoBehaviour
 
     private string scrambleWord()
     {
-        string scrambledWord = word;
+        string scrambledWord = word[0];
         Random.InitState((int)System.DateTime.Now.Ticks);
         int charactersInPlace = scrambledWord.Length;
         int attempts = 0;
         int maxAttempts = 1000;
-        while (charactersInPlace > 1 && attempts < maxAttempts)
+        while (charactersInPlace > 1 && attempts < maxAttempts && word.Contains(scrambledWord))
         {
-            scrambledWord = new string(word.ToCharArray().OrderBy(s => (Random.Range(0, 2) % 2) == 0).ToArray());
+            scrambledWord = new string(word[0].ToCharArray().OrderBy(s => (Random.Range(0, 2) % 2) == 0).ToArray());
             charactersInPlace = calculateCharactersInPlace(scrambledWord);
             attempts++;
             //Debug.Log("Attempts:  "+attempts+"  Characters in place:"+charactersInPlace);
         }
 
         currentGuess = scrambledWord;
-        //Debug.Log("  scrambled:  "+scrambledWord);
+        Debug.Log("  scrambled tiles:  "+scrambledWord);
         return scrambledWord;
     }
 
@@ -88,7 +95,7 @@ public class GameManager : MonoBehaviour
         int charactersInPlace = 0;
         for (int i = 0; i < _word.Length; i++)
         {
-            if (_word[i] == word[i])
+            if (_word[i] == word[0][i])
             {
                 charactersInPlace++;
             }
@@ -97,16 +104,34 @@ public class GameManager : MonoBehaviour
         return charactersInPlace;
     }
 
-    private string readWordFromFile()
+    private void readWordFromFile()
     {
+        string _word = "";
         TextAsset wordList = (TextAsset)Resources.Load("words7", typeof(TextAsset));
         string[] lines = (wordList.text.Split('\n'));
         int index = Random.Range(0, lines.Length);
-        word = lines[index];
-        word = word.ToUpper();
-        word = word.Replace("\r", "").Replace("\n", "");
+        _word = lines[index];
+        _word= _word.Replace("\r", "").Replace("\n", "");
 
-        return word;
+        char[] sortedWordAsCharacters = _word.OrderBy(c => c).ToArray();
+        string sortedWord = new string(sortedWordAsCharacters);
+        //Debug.Log("Sorted word:  " + sortedWord);
+
+        int candidates = 0;
+        for (int i = 0; i < lines.Length; i++ )
+        {
+            string candidate = lines[i];
+            candidate = candidate.Replace("\r", "").Replace("\n", "");
+            char[] sortedCandidateAsCharacters = candidate.OrderBy(c => c).ToArray();
+            string sortedCandidate = new string(sortedCandidateAsCharacters);
+            if (sortedWord == sortedCandidate)
+            {
+                Debug.Log("Candidate:  " + candidate);
+                candidates++;
+                word.Add(candidate);
+            }
+        }
+        Debug.Log("Total candidates for solution:  " + candidates);
     }
 
     public void SceneReset()
@@ -121,23 +146,23 @@ public class GameManager : MonoBehaviour
 
     public bool isJumbleSolved()
     {
-        if (word == currentGuess)
+        isSolved = false;
+        foreach (string currentTiles in word)
         {
-            isSolved = true;
+            if (currentTiles == currentGuess)
+            {
+                isSolved = true;
 
-            GameObject canvasMain = GameObject.Find("Canvas_Main");
+                GameObject canvasMain = GameObject.Find("Canvas_Main");
 
-            Transform textYouWin = canvasMain.transform.Find("Text_YouWin");
-            Text textYW = textYouWin.GetComponent<Text>();
-            textYW.enabled = true;
+                Transform textYouWin = canvasMain.transform.Find("Text_YouWin");
+                Text textYW = textYouWin.GetComponent<Text>();
+                textYW.enabled = true;
 
-            Transform textInst = canvasMain.transform.Find("Text_Instructions");
-            Text textI = textInst.GetComponent<Text>();
-            textI.enabled = false;
-        }
-        else
-        {
-            isSolved = false;
+                Transform textInst = canvasMain.transform.Find("Text_Instructions");
+                Text textI = textInst.GetComponent<Text>();
+                textI.enabled = false;
+            }
         }
 
         return isSolved;
