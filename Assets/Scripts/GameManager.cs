@@ -103,6 +103,7 @@ public class GameManager : MonoBehaviour
         string[] lines = (wordList.text.Split('\n'));
         int index = Random.Range(0, lines.Length);
         word = lines[index];
+        word = word.ToUpper();
         word = word.Replace("\r", "").Replace("\n", "");
 
         return word;
