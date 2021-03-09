@@ -26,16 +26,9 @@ private void Awake()
     public void OnDrag(PointerEventData eventData)
     {
         //Debug.Log("OnDrag");
-        GameObject canvasMain = GameObject.Find("Canvas_Main");
-        
-        GameManager gmScript = canvasMain.GetComponent<GameManager>();
-
-        if (gmScript.isSolved == false)
-        {
-
-            float scaleFactor = canvasMain.transform.localScale.x;
-            rectTransform.anchoredPosition += eventData.delta / scaleFactor;
-        }
+        GameObject canvasMain = GameObject.Find("Canvas_Main");        
+        float scaleFactor = canvasMain.transform.localScale.x;
+        rectTransform.anchoredPosition += eventData.delta / scaleFactor;
     }
 
     public void OnDrop(PointerEventData eventData)
