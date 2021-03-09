@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     public List<GameObject> tile = new List<GameObject>();
     private List<string> word = new List<string>();
     public string currentGuess { get; set; }
-    public bool isSolved;
+    public bool isSolved { get; set; }
 
     void Start()
     {
