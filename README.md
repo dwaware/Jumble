@@ -1,7 +1,7 @@
 # Jumble
  Unscramble the word!
 
-![Untitled](https://user-images.githubusercontent.com/74695555/110392426-243ca980-8026-11eb-8c5e-4d39e26b6827.png)
-![jumble2](https://user-images.githubusercontent.com/74695555/110392429-24d54000-8026-11eb-92ee-1f3a6b9d94ae.png)
-![jumble3](https://user-images.githubusercontent.com/74695555/110392430-24d54000-8026-11eb-82ee-49f25e4b0f8d.png)
-![jumble4](https://user-images.githubusercontent.com/74695555/110392431-24d54000-8026-11eb-96d8-f12ebf2da9d9.png)
+![jumble1](https://user-images.githubusercontent.com/74695555/110714663-166f5b80-81c1-11eb-928a-6f801382f0a6.png)
+![jumble2](https://user-images.githubusercontent.com/74695555/110714664-166f5b80-81c1-11eb-8bca-25aee5dee395.png)
+![jumble3](https://user-images.githubusercontent.com/74695555/110714665-166f5b80-81c1-11eb-9b21-531fd84208ab.png)
+![jumble4](https://user-images.githubusercontent.com/74695555/110714666-1707f200-81c1-11eb-8029-a45af53ee2d3.png)
