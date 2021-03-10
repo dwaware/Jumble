@@ -85,7 +85,6 @@ private void Awake()
     public void OnEndDrag(PointerEventData eventData)
     {
         //Debug.Log("OnEndDrag");
-
         Tile thisScript = this.GetComponent<Tile>();
         this.transform.localPosition = thisScript.origPos;
 

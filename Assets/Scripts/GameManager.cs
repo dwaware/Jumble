@@ -15,8 +15,42 @@ public class GameManager : MonoBehaviour
     public string currentGuess { get; set; }
     public bool isSolved { get; set; }
 
+    public enum Difficulty { Easy, Normal, Hard };
+    private Difficulty _difficulty;
+
+    public Difficulty CurrentDifficulty
+    {
+        get { return _difficulty; }
+        set { _difficulty = value; }
+    }
+
+    public void OnSliderValueChanged(float value)
+    {
+        Debug.Log("On slider value changed!!!!!!!!!!!!!!!!");
+        float sliderDifficulty = GameObject.Find("Slider_Difficulty").GetComponent<Slider>().value;
+        CurrentDifficulty = (Difficulty)sliderDifficulty;
+        Debug.Log("Current Difficulty:  "+CurrentDifficulty);
+
+        PlayerPrefs.SetInt("Player Difficulty", (int)CurrentDifficulty);
+        Debug.Log("Writing Difficulty to prefs as:  " + (int)CurrentDifficulty);
+
+        GameObject.Find("Text_Handle").GetComponent<Text>().text = CurrentDifficulty.ToString();
+
+        //GameObject.Find("Text_Handle").GetComponent<Text>().text = CurrentDifficulty;
+    }
+
     void Start()
     {
+        Debug.Log(" ### ### ### GAME START ### ### ###");
+
+        Slider sliderDifficulty = GameObject.Find("Slider_Difficulty").GetComponent<Slider>();
+
+        int difficultyAsInt = PlayerPrefs.GetInt("Player Difficulty");
+        CurrentDifficulty = (Difficulty)difficultyAsInt;
+        Debug.Log("Difficulty from prefs:  " + CurrentDifficulty);
+
+        sliderDifficulty.value = (float)difficultyAsInt;
+
         GameObject canvasMain = GameObject.Find("Canvas_Main");
 
         Transform textYouWin = canvasMain.transform.Find("Text_YouWin");
@@ -107,7 +141,9 @@ public class GameManager : MonoBehaviour
     private void readWordFromFile()
     {
         string _word = "";
-        TextAsset wordList = (TextAsset)Resources.Load("words7", typeof(TextAsset));
+        Debug.Log("about to read word file using difficulty:  " + CurrentDifficulty);
+        TextAsset wordList = (TextAsset)Resources.Load("words7_"+CurrentDifficulty, typeof(TextAsset));
+        Debug.Log("Using word list:  " + wordList.name);
         string[] lines = (wordList.text.Split('\n'));
         int index = Random.Range(0, lines.Length);
         _word = lines[index];
