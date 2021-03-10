@@ -51,6 +51,8 @@ public class GameManager : MonoBehaviour
 
         sliderDifficulty.value = (float)difficultyAsInt;
 
+        GameObject.Find("Text_Handle").GetComponent<Text>().text = CurrentDifficulty.ToString();
+
         GameObject canvasMain = GameObject.Find("Canvas_Main");
 
         Transform textYouWin = canvasMain.transform.Find("Text_YouWin");
@@ -70,6 +72,7 @@ public class GameManager : MonoBehaviour
 
         string scrambledWord = scrambleWord();
         isSolved = false;
+        Debug.Log("Setting isSolved to " + isSolved + " <<<");
 
         for (int i = 0; i < word[0].Length; i++)
         {
@@ -95,13 +98,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    private void AllowTileInteraction(bool _interact)
     {
-        if (Input.GetKeyUp(KeyCode.Escape))
+        foreach (GameObject individualTile in tile)
         {
-            ExitGame();
+            DragNDrop dndScript = individualTile.GetComponent<DragNDrop>();
+            dndScript.enabled = _interact;
         }
+        Debug.Log("Is tile drag and drop enabled:  " + _interact);
     }
 
     private string scrambleWord()
@@ -198,6 +202,8 @@ public class GameManager : MonoBehaviour
                 Transform textInst = canvasMain.transform.Find("Text_Instructions");
                 Text textI = textInst.GetComponent<Text>();
                 textI.enabled = false;
+
+                Debug.Log("Setting isSolved to " + isSolved + " <<<");
             }
         }
 

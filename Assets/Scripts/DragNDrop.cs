@@ -9,7 +9,7 @@ public class DragNDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, 
     private RectTransform rectTransform;
     private CanvasGroup canvasGroup;
 
-private void Awake()
+    private void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
         canvasGroup = GetComponent<CanvasGroup>();
@@ -26,7 +26,7 @@ private void Awake()
     public void OnDrag(PointerEventData eventData)
     {
         //Debug.Log("OnDrag");
-        GameObject canvasMain = GameObject.Find("Canvas_Main");        
+        GameObject canvasMain = GameObject.Find("Canvas_Main");
         float scaleFactor = canvasMain.transform.localScale.x;
         rectTransform.anchoredPosition += eventData.delta / scaleFactor;
     }
