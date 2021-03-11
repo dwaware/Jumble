@@ -11,9 +11,11 @@ public class GameManager : MonoBehaviour
 {
     public List<GameObject> holder = new List<GameObject>();
     public List<GameObject> tile = new List<GameObject>();
+    public List<GameObject> hint = new List<GameObject>();
     private List<string> word = new List<string>();
     public string currentGuess { get; set; }
     public bool isSolved { get; set; }
+    public bool displayHint { get; set; }
 
     public enum Difficulty { Easy, Normal, Hard };
     private Difficulty _difficulty;
@@ -85,11 +87,16 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < word[0].Length; i++)
         {
             GameObject myTile = Instantiate(tile[i]);
+
+            Tile tileScript = myTile.GetComponent<Tile>();
+            tileScript.tileScale = new Vector3(1, 1, 1);
+            Debug.Log(tileScript.tileScale);
+            tile[i].transform.localScale = tileScript.tileScale;
+
             myTile.transform.SetParent(canvasMain.transform,false);
             myTile.transform.localPosition = new Vector3(-450 + i * 150, 0, 0);
             myTile.name = "Tile_" + i;
 
-            Tile tileScript = myTile.GetComponent<Tile>();
             tileScript.origPos = myTile.transform.localPosition;
             tileScript.tileIndex = i;
 

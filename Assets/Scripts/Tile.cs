@@ -7,4 +7,5 @@ public class Tile : MonoBehaviour
 {
     public Vector3 origPos { get; set; }
     public int tileIndex { get; set; }
+    public Vector3 tileScale { get; set; }
 }
