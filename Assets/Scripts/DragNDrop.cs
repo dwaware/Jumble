@@ -21,6 +21,20 @@ public class DragNDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, 
         this.gameObject.transform.SetAsLastSibling();
         canvasGroup.alpha = 0.6f;
         canvasGroup.blocksRaycasts = false;
+
+        GameObject[] gos;
+        gos = GameObject.FindGameObjectsWithTag("Holder");
+
+        foreach (GameObject go in gos)
+        {
+            Image myImage = go.GetComponent<Image>();
+            myImage.color = new Color(0.1142f, 0.4716f, 0.0956f, 1f);
+
+        }
+
+        GameObject canvasMain = GameObject.Find("Canvas_Main");
+        GameManager gmScript = canvasMain.GetComponent<GameManager>();
+        gmScript.displayHint = true;
     }
 
     public void OnDrag(PointerEventData eventData)

@@ -11,7 +11,6 @@ public class GameManager : MonoBehaviour
 {
     public List<GameObject> holder = new List<GameObject>();
     public List<GameObject> tile = new List<GameObject>();
-    public List<GameObject> hint = new List<GameObject>();
     private List<string> word = new List<string>();
     public string currentGuess { get; set; }
     public bool isSolved { get; set; }
@@ -31,7 +30,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("On slider value changed!!!!!!!!!!!!!!!!");
         float sliderDifficulty = GameObject.Find("Slider_Difficulty").GetComponent<Slider>().value;
         CurrentDifficulty = (Difficulty)sliderDifficulty;
-        Debug.Log("Current Difficulty:  "+CurrentDifficulty);
+        Debug.Log("Current Difficulty:  " + CurrentDifficulty);
 
         PlayerPrefs.SetInt("Player Difficulty", (int)CurrentDifficulty);
         Debug.Log("Writing Difficulty to prefs as:  " + (int)CurrentDifficulty);
@@ -44,6 +43,8 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         Debug.Log(" ### ### ### GAME START ### ### ###");
+
+        displayHint = true;
 
         Slider sliderDifficulty = GameObject.Find("Slider_Difficulty").GetComponent<Slider>();
 
@@ -62,7 +63,7 @@ public class GameManager : MonoBehaviour
         textYW.enabled = false;
 
         Transform textInst = canvasMain.transform.Find("Text_Instructions");
-        Text textI= textInst.GetComponent<Text>();
+        Text textI = textInst.GetComponent<Text>();
         textI.enabled = true;
 
         readWordFromFile();
@@ -82,6 +83,9 @@ public class GameManager : MonoBehaviour
             myHolder.transform.SetParent(canvasMain.transform, false);
             myHolder.transform.localPosition = new Vector3(-450 + i * 150, 0, 0);
             myHolder.name = "Holder_" + i;
+
+            Image myImage = myHolder.GetComponent<Image>();
+            myImage.color = new Color(0.1142f, 0.4716f, 0.0956f, 1f);
         }
 
         for (int i = 0; i < word[0].Length; i++)
@@ -90,10 +94,10 @@ public class GameManager : MonoBehaviour
 
             Tile tileScript = myTile.GetComponent<Tile>();
             tileScript.tileScale = new Vector3(1, 1, 1);
-            Debug.Log(tileScript.tileScale);
+            //Debug.Log(tileScript.tileScale);
             tile[i].transform.localScale = tileScript.tileScale;
 
-            myTile.transform.SetParent(canvasMain.transform,false);
+            myTile.transform.SetParent(canvasMain.transform, false);
             myTile.transform.localPosition = new Vector3(-450 + i * 150, 0, 0);
             myTile.name = "Tile_" + i;
 
@@ -103,16 +107,6 @@ public class GameManager : MonoBehaviour
             Text myText = myTile.GetComponentInChildren<Text>();
             myText.text = scrambledWord[i].ToString();
         }
-    }
-
-    private void AllowTileInteraction(bool _interact)
-    {
-        foreach (GameObject individualTile in tile)
-        {
-            DragNDrop dndScript = individualTile.GetComponent<DragNDrop>();
-            dndScript.enabled = _interact;
-        }
-        Debug.Log("Is tile drag and drop enabled:  " + _interact);
     }
 
     private string scrambleWord()
@@ -131,7 +125,7 @@ public class GameManager : MonoBehaviour
         }
 
         currentGuess = scrambledWord;
-        Debug.Log("  scrambled tiles:  "+scrambledWord);
+        Debug.Log("  scrambled tiles:  " + scrambledWord);
         return scrambledWord;
     }
 
@@ -153,19 +147,19 @@ public class GameManager : MonoBehaviour
     {
         string _word = "";
         Debug.Log("about to read word file using difficulty:  " + CurrentDifficulty);
-        TextAsset wordList = (TextAsset)Resources.Load("words7_"+CurrentDifficulty, typeof(TextAsset));
+        TextAsset wordList = (TextAsset)Resources.Load("words7_" + CurrentDifficulty, typeof(TextAsset));
         Debug.Log("Using word list:  " + wordList.name);
         string[] lines = (wordList.text.Split('\n'));
         int index = Random.Range(0, lines.Length);
         _word = lines[index];
-        _word= _word.Replace("\r", "").Replace("\n", "");
+        _word = _word.Replace("\r", "").Replace("\n", "");
 
         char[] sortedWordAsCharacters = _word.OrderBy(c => c).ToArray();
         string sortedWord = new string(sortedWordAsCharacters);
         //Debug.Log("Sorted word:  " + sortedWord);
 
         int candidates = 0;
-        for (int i = 0; i < lines.Length; i++ )
+        for (int i = 0; i < lines.Length; i++)
         {
             string candidate = lines[i];
             candidate = candidate.Replace("\r", "").Replace("\n", "");
@@ -215,5 +209,40 @@ public class GameManager : MonoBehaviour
         }
 
         return isSolved;
+    }
+
+    public void Hint()
+    {
+        Debug.Log("HINT!");
+        for (int i = 0; i < word[0].Length; i++)
+        {
+            if (currentGuess[i].ToString() == word[0][i].ToString())
+            {
+                Debug.Log("EQUAL AT POSITION:  " + i);
+            }
+        }
+        if (displayHint == true && isSolved == false)
+        {
+            Debug.Log("HOLDER COUNT IS:  " + holder.Count);
+
+            GameObject[] gos;
+
+            gos = GameObject.FindGameObjectsWithTag("Holder");
+
+            int r = Random.Range(0, word[0].Length);
+            Debug.Log("Random number is:  " + r);
+
+            Image myImage = gos[r].GetComponent<Image>();
+
+            if ( currentGuess[r] == word[0][r] )
+            {
+                myImage.color = new Color(0f, 1f, 0f, 1f);
+            }
+            else
+            {
+                myImage.color = new Color(1f, 0f, 0f, 1f);
+            }
+        }
+        displayHint = false;
     }
 }
