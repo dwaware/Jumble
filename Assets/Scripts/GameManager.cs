@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using System.Linq;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
+using DG.Tweening;
 
 public class GameManager : MonoBehaviour
 {
@@ -199,6 +200,8 @@ public class GameManager : MonoBehaviour
                 Transform textYouWin = canvasMain.transform.Find("Text_YouWin");
                 Text textYW = textYouWin.GetComponent<Text>();
                 textYW.enabled = true;
+
+                textYouWin.DOMove(new Vector3(260, 50, 0), 2);
 
                 Transform textInst = canvasMain.transform.Find("Text_Instructions");
                 Text textI = textInst.GetComponent<Text>();
