@@ -201,7 +201,7 @@ public class GameManager : MonoBehaviour
                 Text textYW = textYouWin.GetComponent<Text>();
                 textYW.enabled = true;
 
-                textYouWin.DOMove(new Vector3(260, 50, 0), 2);
+                textYouWin.DOMove(new Vector3(430, 50, 0), 2);
 
                 Transform textInst = canvasMain.transform.Find("Text_Instructions");
                 Text textI = textInst.GetComponent<Text>();
